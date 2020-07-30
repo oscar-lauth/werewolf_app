@@ -8,8 +8,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         theme: ThemeData(
-            primaryColor: Colors.grey[900],
-            scaffoldBackgroundColor: Colors.grey[800]),
+            primaryColor: new Color(0xFF324E75),
+            scaffoldBackgroundColor: new Color(0xFF0E2F4E)),
         home: Menu());
   }
 }
