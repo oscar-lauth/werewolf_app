@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-//import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:werewolf_app/menu_buttons.dart';
+import 'package:werewolf_app/components/menu_buttons.dart';
 
 class Menu extends StatefulWidget {
   @override

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/cupertino.dart';
-import './database_functions.dart';
+import 'package:werewolf_app/backend/database_functions.dart';
 
 class JoinGameSheet extends StatefulWidget {
   JoinGameSheetState createState() => JoinGameSheetState();
@@ -57,7 +57,19 @@ class JoinGameSheetState extends State<JoinGameSheet> {
                         .then((value) => _validate = value);
                     setState(() => _validate);
                     if (_validate) {
+                      //setupGame(inputGameID, 60);
+                      print(await addPlayer(inputGameID, "oscar", false));
+                      print(await addPlayer(inputGameID, "drew", false));
+                      print(await addPlayer(inputGameID, "vincent", false));
+                      //print(await getGameTimer(inputGameID));
+                      //setupGame(inputGameID, 90);
+                      // print(await addPlayer(inputGameID, "oscar", true));
+                      // print(await addPlayer(inputGameID, "drew ", false));
+                      // print(await addPlayer(inputGameID, "tyler", false));
+                      // print(await addPlayer(inputGameID, "vinny", false));
+                      //setupGame('450');
                       //joinGame(inputGameID)/send to lobby page
+                      //setupGame(inputGameID);
                     }
                   }
                 }),
