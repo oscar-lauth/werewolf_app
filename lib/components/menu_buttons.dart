@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import './menu_sheets.dart';
+import 'package:werewolf_app/components/menu_sheets.dart';
 
 class JoinGameButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FlatButton(
-        child: Text("Join Game",
-            style: GoogleFonts.medievalSharp(
-                color: Theme.of(context).backgroundColor, fontSize: 30)),
-        color: Theme.of(context).accentColor,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+        padding: const EdgeInsets.only(bottom: 4, top: 4, left: 20, right: 20),
+        child: Text("JOIN GAME", style: Theme.of(context).textTheme.button),
+        color: Theme.of(context).backgroundColor,
+        shape: RoundedRectangleBorder(
+            side: BorderSide(color: Theme.of(context).accentColor, width: 3),
+            borderRadius: BorderRadius.circular(50)),
         onPressed: () {
           showModalBottomSheet<void>(
               context: context,
@@ -25,11 +25,12 @@ class HostGameButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FlatButton(
-        child: Text("Host Game",
-            style: GoogleFonts.medievalSharp(
-                color: Theme.of(context).accentColor, fontSize: 30)),
+        padding: const EdgeInsets.only(bottom: 4, top: 4, left: 20, right: 20),
+        child: Text("HOST GAME", style: Theme.of(context).textTheme.button),
         color: Theme.of(context).backgroundColor,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+        shape: RoundedRectangleBorder(
+            side: BorderSide(color: Theme.of(context).accentColor, width: 3),
+            borderRadius: BorderRadius.circular(50)),
         onPressed: () {
           showModalBottomSheet<void>(
               context: context,

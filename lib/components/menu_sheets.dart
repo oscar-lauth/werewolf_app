@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:werewolf_app/backend/database_functions.dart';
+import 'package:werewolf_app/screens/entrance.dart';
+import 'package:werewolf_app/screens/lobby.dart';
+import 'dart:math';
 
 class JoinGameSheet extends StatefulWidget {
   JoinGameSheetState createState() => JoinGameSheetState();
 }
 
 class JoinGameSheetState extends State<JoinGameSheet> {
-  bool _validate = true;
+  bool _validateID = true;
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.75,
+      height: MediaQuery.of(context).size.height * 0.65,
       decoration: new BoxDecoration(
         color: Theme.of(context).backgroundColor,
         borderRadius: new BorderRadius.only(
@@ -26,24 +27,27 @@ class JoinGameSheetState extends State<JoinGameSheet> {
           SizedBox(height: 15),
           Text(
             "Join Game",
-            style: TextStyle(
-              fontSize: 24,
-              color: Theme.of(context).accentColor,
-            ),
+            style: Theme.of(context).textTheme.headline2,
           ),
           Container(
             margin: EdgeInsets.only(top: 60, left: 120, right: 120),
             child: TextField(
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 40,
-                  color: Theme.of(context).accentColor,
-                ),
+                cursorColor: Theme.of(context).accentColor,
+                style: Theme.of(context).textTheme.headline4,
                 decoration: InputDecoration(
-                  hintText: "Game ID",
-                  hintStyle: TextStyle(color: Theme.of(context).hintColor),
+                  hintText: "GAME ID",
+                  hintStyle: Theme.of(context).textTheme.headline3,
                   counterText: "",
-                  errorText: _validate ? null : 'Invalid Game ID',
+                  errorText: _validateID ? null : 'Invalid Game ID',
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide:
+                        BorderSide(color: Theme.of(context).accentColor),
+                  ),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide:
+                        BorderSide(color: Theme.of(context).accentColor),
+                  ),
                 ),
                 inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
                 keyboardType: TextInputType.numberWithOptions(
@@ -51,25 +55,17 @@ class JoinGameSheetState extends State<JoinGameSheet> {
                 maxLength: 3,
                 maxLengthEnforced: true,
                 onChanged: (String inputGameID) async {
-                  setState(() => _validate = true); //no errorText when length<3
+                  setState(
+                      () => _validateID = true); //no errorText when length<3
                   if (inputGameID.length == 3) {
-                    await isValidID(inputGameID)
-                        .then((value) => _validate = value);
-                    setState(() => _validate);
-                    if (_validate) {
-                      //setupGame(inputGameID, 60);
-                      print(await addPlayer(inputGameID, "oscar", false));
-                      print(await addPlayer(inputGameID, "drew", false));
-                      print(await addPlayer(inputGameID, "vincent", false));
-                      //print(await getGameTimer(inputGameID));
-                      //setupGame(inputGameID, 90);
-                      // print(await addPlayer(inputGameID, "oscar", true));
-                      // print(await addPlayer(inputGameID, "drew ", false));
-                      // print(await addPlayer(inputGameID, "tyler", false));
-                      // print(await addPlayer(inputGameID, "vinny", false));
-                      //setupGame('450');
-                      //joinGame(inputGameID)/send to lobby page
-                      //setupGame(inputGameID);
+                    _validateID = await isExistingID(inputGameID);
+                    setState(() => _validateID);
+                    if (_validateID) {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  Entrance(gameID: inputGameID)));
                     }
                   }
                 }),
@@ -80,15 +76,16 @@ class JoinGameSheetState extends State<JoinGameSheet> {
   }
 }
 
-class HostGameSheet extends StatelessWidget {
-  final List<int> timeOptions = [30, 45, 60, 75, 90];
-  final FixedExtentScrollController _controller =
-      new FixedExtentScrollController(initialItem: 2);
-  //int tempTime;
+class HostGameSheet extends StatefulWidget {
+  HostGameSheetState createState() => HostGameSheetState();
+}
+
+class HostGameSheetState extends State<HostGameSheet> {
+  String _name = "";
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.75,
+      height: MediaQuery.of(context).size.height * 0.65,
       decoration: new BoxDecoration(
         color: Theme.of(context).backgroundColor,
         borderRadius: new BorderRadius.only(
@@ -101,54 +98,57 @@ class HostGameSheet extends StatelessWidget {
           SizedBox(height: 15),
           Text(
             "Host Game",
-            style: TextStyle(
-              fontSize: 24,
-              color: Theme.of(context).accentColor,
+            style: Theme.of(context).textTheme.headline2,
+          ),
+          Container(
+            margin: EdgeInsets.only(top: 10, left: 90, right: 90),
+            child: TextField(
+              autocorrect: false,
+              textAlign: TextAlign.center,
+              cursorColor: Theme.of(context).accentColor,
+              style: Theme.of(context).textTheme.headline6,
+              decoration: InputDecoration(
+                hintText: "NAME",
+                hintStyle: Theme.of(context).textTheme.headline3,
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Theme.of(context).accentColor),
+                ),
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Theme.of(context).accentColor),
+                ),
+              ),
+              maxLines: 1,
+              onChanged: (String inputName) {
+                _name = inputName;
+              },
             ),
           ),
-          Row(
-            children: <Widget>[
-              Container(
-                alignment: Alignment.centerRight,
-                width: MediaQuery.of(context).size.width * .40,
-                child: Text(
-                  "Game Timer:",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                  ),
-                ),
-              ),
-              Container(
-                height: 108,
-                width: MediaQuery.of(context).size.width * .20,
-                child: CupertinoPicker(
-                  onSelectedItemChanged: (index) => null,
-                  scrollController: _controller,
-                  itemExtent: 27,
-                  children: [
-                    Text("30:00", style: TextStyle(fontSize: 24)),
-                    Text("45:00", style: TextStyle(fontSize: 24)),
-                    Text("60:00", style: TextStyle(fontSize: 24)),
-                    Text("75:00", style: TextStyle(fontSize: 24)),
-                    Text("90:00", style: TextStyle(fontSize: 24)),
-                  ],
-                ),
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width * .40,
-              ),
-            ],
-          ),
+          SizedBox(height: 25),
           FlatButton(
-            child: Text("Host Game",
-                style: GoogleFonts.medievalSharp(
-                    color: Theme.of(context).accentColor, fontSize: 30)),
+            padding:
+                const EdgeInsets.only(bottom: 4, top: 4, left: 20, right: 20),
+            child: Text("JOIN", style: Theme.of(context).textTheme.button),
             color: Theme.of(context).backgroundColor,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
-            onPressed: () {
-              //HostGame(time);
+            shape: RoundedRectangleBorder(
+                side:
+                    BorderSide(color: Theme.of(context).accentColor, width: 3),
+                borderRadius: BorderRadius.circular(50)),
+            onPressed: () async {
+              if (_name != "") {
+                String newGameID = (new Random().nextInt(900) + 100)
+                    .toString(); //generate random 3 digit num
+                while (await isExistingID(newGameID)) {
+                  newGameID = (new Random().nextInt(900) + 100)
+                      .toString(); //generate random 3 digit num
+                }
+                setupGame(newGameID);
+                List<String> newRoles = await addPlayer(newGameID, _name, true);
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Lobby(roles: newRoles)),
+                    (route) => false);
+              }
             },
           ),
         ],

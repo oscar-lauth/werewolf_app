@@ -1,5 +1,4 @@
 import 'package:firebase_database/firebase_database.dart';
-//import 'package:werewolf_app/backend/json_model.dart';
 
 final DatabaseReference dbref = FirebaseDatabase.instance.reference();
 final List<String> trueRoles = [
@@ -19,8 +18,8 @@ final List<String> fakeRoles = [
   'blacksmith'
 ];
 
-Future<bool> isValidID(String gameID) {
-  // ensures gameID exists
+Future<bool> isExistingID(String gameID) {
+  // returns if gameID already exists
   return dbref.child(gameID).once().then((DataSnapshot data) {
     return data.value != null;
   });
@@ -29,19 +28,18 @@ Future<bool> isValidID(String gameID) {
 Future<bool> isValidName(String gameID, String name) {
   //ensures name is unique in game
   return dbref.child("$gameID/players/$name").once().then((DataSnapshot data) {
-    return data.value != null;
+    return data.value == null;
   });
 }
 
-void setupGame(String gameID, int timer) {
+void setupGame(String gameID) {
   trueRoles.shuffle();
   fakeRoles.shuffle();
   dbref.child(gameID).set({
-    "randomFakeRoles": trueRoles,
-    "randomTrueRoles": fakeRoles,
+    "randomTrueRoles": trueRoles,
+    "randomFakeRoles": fakeRoles,
     "players": {},
     "playerIndex": 0,
-    "timer": timer
   });
 }
 
@@ -64,15 +62,6 @@ Future<String> getTrueRole(String gameID, String playerName) {
 //     return playerInfo;
 //   });
 // }
-
-Future<int> getGameTimer(String gameID) {
-  //could make timer an attribute of this class
-  return dbref
-      .child("$gameID/timer")
-      .once()
-      .then((DataSnapshot data) => data.value);
-}
-
 Future<List<String>> addPlayer(String gameID, String name, bool host) async {
   int playerIndex = await getPlayerIndex(gameID);
   List<String> roles = await getNextRoles(gameID, playerIndex);

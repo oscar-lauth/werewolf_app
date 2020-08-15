@@ -1,27 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:werewolf_app/components/menu_buttons.dart';
 
-class Menu extends StatefulWidget {
+class Menu extends StatelessWidget {
   @override
-  MenuState createState() => MenuState();
-}
-
-class MenuState extends State<Menu> {
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Werewolf Menu',
-            style: GoogleFonts.medievalSharp(
-                color: Theme.of(context).accentColor, fontSize: 30)),
-      ),
+      resizeToAvoidBottomInset:
+          false, // prevents renderflex overflow when keyboard pops up
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
+            SizedBox(height: MediaQuery.of(context).size.height * .20),
+            Text(
+              "Werewolf",
+              style: Theme.of(context).textTheme.headline1,
+            ),
+            SizedBox(height: MediaQuery.of(context).size.height * .40),
             JoinGameButton(),
+            SizedBox(height: 35),
             HostGameButton(),
-            SizedBox(height: 30)
           ],
         ),
       ),
