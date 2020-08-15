@@ -81,6 +81,7 @@ class HostGameSheet extends StatefulWidget {
 }
 
 class HostGameSheetState extends State<HostGameSheet> {
+  String newGameID;
   String _name = "";
   @override
   Widget build(BuildContext context) {
@@ -127,7 +128,7 @@ class HostGameSheetState extends State<HostGameSheet> {
           FlatButton(
             padding:
                 const EdgeInsets.only(bottom: 4, top: 4, left: 20, right: 20),
-            child: Text("JOIN", style: Theme.of(context).textTheme.button),
+            child: Text("HOST", style: Theme.of(context).textTheme.button),
             color: Theme.of(context).backgroundColor,
             shape: RoundedRectangleBorder(
                 side:
@@ -135,18 +136,15 @@ class HostGameSheetState extends State<HostGameSheet> {
                 borderRadius: BorderRadius.circular(50)),
             onPressed: () async {
               if (_name != "") {
-                String newGameID = (new Random().nextInt(900) + 100)
-                    .toString(); //generate random 3 digit num
-                while (await isExistingID(newGameID)) {
-                  newGameID = (new Random().nextInt(900) + 100)
-                      .toString(); //generate random 3 digit num
-                }
+                do newGameID = (new Random().nextInt(900) + 100)
+                    .toString(); while (await isExistingID(newGameID));
                 setupGame(newGameID);
                 List<String> newRoles = await addPlayer(newGameID, _name, true);
                 Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => Lobby(roles: newRoles)),
+                        builder: (context) => Lobby(
+                            gameID: newGameID, roles: newRoles, host: true)),
                     (route) => false);
               }
             },

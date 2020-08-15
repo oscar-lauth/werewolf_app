@@ -37,6 +37,16 @@ class MyApp extends StatelessWidget {
               color: Colors.yellow[700],
               fontSize: 30,
             ),
+            // dialogButtonTheme
+            subtitle1: GoogleFonts.carterOne(
+              color: Colors.red,
+              fontSize: 30,
+            ),
+            // dialogBodyTheme
+            bodyText1: GoogleFonts.carterOne(
+              color: Colors.yellow[700],
+              fontSize: 32,
+            ),
           ),
         ),
         home: Menu());

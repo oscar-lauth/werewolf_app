@@ -43,6 +43,28 @@ void setupGame(String gameID) {
   });
 }
 
+void endGame(String gameID) {
+  dbref.child(gameID).set({});
+}
+
+int getMoney(String fakeRole) {
+  switch (fakeRole) {
+    case "knight":
+      return 100;
+    case "innkeeper":
+      return 120;
+    case "stable boy":
+      return 25;
+    case "bard":
+      return 50;
+    case "archer":
+      return 60;
+    case "blacksmith":
+      return 80;
+  }
+  return 0;
+}
+
 Future<String> getTrueRole(String gameID, String playerName) {
   return dbref
       .child("$gameID/players/$playerName")

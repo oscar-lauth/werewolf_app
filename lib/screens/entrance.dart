@@ -73,7 +73,10 @@ class EntranceState extends State<Entrance> {
                       Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => Lobby(roles: newRoles)),
+                              builder: (context) => Lobby(
+                                  gameID: widget.gameID,
+                                  roles: newRoles,
+                                  host: false)),
                           (route) => false);
                     }
                   }),
